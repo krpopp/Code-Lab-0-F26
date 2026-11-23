@@ -10,7 +10,7 @@ public class Hazard : MonoBehaviour
     public bool bounce;
 
     public Transform moveToObj;
-    Vector3 moveTo;
+    Vector3 targetPosition;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -18,38 +18,50 @@ public class Hazard : MonoBehaviour
         startPosition = transform.position;
         myBody = GetComponent<Rigidbody2D>();
 
-        moveTo = moveToObj.position;
+        targetPosition = moveToObj.position;
     }
 
     // Update is called once per frame
     void Update()
     {
-        Vector2 newPosition = Vector3.MoveTowards(transform.position, moveTo, speed * Time.fixedDeltaTime);
+        //move to a target position
+        Vector2 newPosition = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.fixedDeltaTime);
         myBody.MovePosition(newPosition);
 
         //if we've nearly reached the target position
-        if (Vector2.Distance(transform.position, moveTo) < 0.1f)
+        if (Vector2.Distance(transform.position, targetPosition) < 0.1f)
         {
             //if this is a bouncing hazard
             if (bounce)
             {
-                //if we were moving to the target object
-                if (moveTo == moveToObj.position)
-                {
-                    //change to move to our start position
-                    moveTo = startPosition;
-                }
-                else
-                {
-                    //otherwise, move to the target object
-                    moveTo = moveToObj.position;
-                }
+                BounceBack();
             }
             else
             {
-                //go back to the starting position
-                transform.position = startPosition;
+                RestartPosition();
             }
         }
+    }
+
+    void BounceBack()
+    {
+        //if we were moving to the target object
+        if (targetPosition == moveToObj.position)
+        {
+            //change to move to our start position
+            targetPosition = startPosition;
+        }
+        else
+        {
+            //otherwise, move to the target object
+            targetPosition = moveToObj.position;
+        }
+    }
+
+    void RestartPosition()
+    {
+        //go back to the starting position
+        transform.position = startPosition;
+        
     }
 }

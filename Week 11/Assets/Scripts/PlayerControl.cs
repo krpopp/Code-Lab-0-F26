@@ -23,6 +23,7 @@ public class PlayerControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //moving the player with default input keys
         Vector2 input = moveAction.ReadValue<Vector2>();
         Vector2 newPosition = new Vector2(transform.position.x, transform.position.y);
         newPosition += input * speed * Time.fixedDeltaTime;
